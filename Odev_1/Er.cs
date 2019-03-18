@@ -14,32 +14,38 @@ namespace Odev_1
 
         protected override void HaraketEt(Bolge _koordinat, double karar)
         {
-            int x = _koordinat.x;
-            int y = _koordinat.y;
+            var oldBolge = Ermeydani.Harita[_koordinat.x, _koordinat.y] as Bolge;
 
-            var bolge = Ermeydani.Harita[x, y] as Bolge;
-
-            if (bolge.Asker == null)
+            if (karar < 0.1)
             {
-                if (karar < 0.1)
-                {
-                    // aşağı ilerle
-                    Koordinat.y--;
-                }
-                else if (karar >= 0.1 && karar < 0.3)
-                {
-                    // yukarı ilerle
-                    Koordinat.y++;
-                }
+                // aşağı ilerle
+                _koordinat.x++;
 
-                Koordinat = _koordinat;
-                Console.WriteLine($"{Ad} Er Harket Ediyor.");
+                var bolge = Ermeydani.Harita[_koordinat.x, _koordinat.y] as Bolge;
+                if (bolge.Asker == null)
+                {
+                    Koordinat.x++;
+                    bolge.Asker = this;
+                    oldBolge.Asker = null;
+                }
             }
-            else
+            else if (karar >= 0.1 && karar < 0.3)
             {
-                Console.WriteLine($"{Ad} Er Harket Edemiyor. {x},{y} dolu");
+                // yukarı ilerle
+                _koordinat.x--;
+
+                var bolge = Ermeydani.Harita[_koordinat.x, _koordinat.y] as Bolge;
+                if (bolge.Asker == null)
+                {
+                    Koordinat.x--;
+                    bolge.Asker = this;
+                    oldBolge.Asker = null;
+                }
             }
+
+            Console.WriteLine($"{Ad} Er Harket Ediyor.");
         }
+
         protected override void AtesEt()
         {
             int[] vurusGucu = new int[3] { 5, 10, 15 };
@@ -53,15 +59,14 @@ namespace Odev_1
                     _digerTakim.HayattakiAskerSayisi--;
                     vurulanAsker.HayattaMi = false;
                 }
-
                 Console.WriteLine($"{vurusGucu[sans]} vuruş yapıldı.");
             }
-            
         }
 
         public override int KararVer(Takim _takim)
         {
             _digerTakim = _takim;
+            rnd = new Random();
             double karar = rnd.NextDouble();
             var _asker = Radar();
             vurulanAsker = _asker;
@@ -74,7 +79,6 @@ namespace Odev_1
             }
             else if (karar >= 0.3 && karar < 0.8)
             {
-                // ateş et
                 AtesEt();
                 x = 1;
             }
@@ -89,30 +93,46 @@ namespace Odev_1
 
         protected override Asker Radar()
         {
+            var state = false;
             Asker asker = new Er();
             for (int i = Koordinat.x - 1; i < Koordinat.x + 1; i++)
             {
-                for (int j = Koordinat.y - 1; j < Koordinat.y + 1; j++)
+                if (!state)
                 {
-                    if(i >= 0 && j >= 0)
+                    for (int j = Koordinat.y - 1; j < Koordinat.y + 1; j++)
                     {
-                        for (int t = 0; t < _digerTakim.Birlik.Length; t++)
+                        if (!state)
                         {
-                            if(_digerTakim.Birlik[t].Koordinat.x == i && _digerTakim.Birlik[t].Koordinat.y == j)
+                            if (i >= 0 && j >= 0)
                             {
-                                asker = _digerTakim.Birlik[t];
-                                break;
+                                for (int t = 0; t < _digerTakim.Birlik.Length; t++)
+                                {
+                                    if (_digerTakim.Birlik[t].Koordinat.x == i && _digerTakim.Birlik[t].Koordinat.y == j)
+                                    {
+                                        asker = _digerTakim.Birlik[t];
+                                        state = true;
+                                        break;
+                                    }
+                                    else
+                                    {
+                                        asker = null;
+                                    }
+                                }
                             }
                             else
                             {
                                 asker = null;
                             }
                         }
+                        else
+                        {
+                            break;
+                        }
                     }
-                    else
-                    {
-                        asker = null;
-                    }
+                }
+                else
+                {
+                    break;
                 }
             }
             return asker;

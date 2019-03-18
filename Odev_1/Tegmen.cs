@@ -7,7 +7,6 @@ namespace Odev_1
 {
     class Tegmen : Asker
     {
-        
         protected override void Bekle()
         {
             Console.WriteLine($"{Ad} Teğmen Bekliyor.");
@@ -15,42 +14,61 @@ namespace Odev_1
 
         protected override void HaraketEt(Bolge _koordinat, double karar)
         {
+            var oldBolge = Ermeydani.Harita[_koordinat.x, _koordinat.y] as Bolge;
 
-            int x = _koordinat.x;
-            int y = _koordinat.y;
-
-            var bolge = Ermeydani.Harita[x, y] as Bolge;
-
-            if (bolge.Asker == null)
+            if (karar < 0.1)
             {
-                if (karar < 0.1)
+                // aşağı ilerle
+                _koordinat.x++;
+
+                var bolge = Ermeydani.Harita[_koordinat.x, _koordinat.y] as Bolge;
+                if (bolge.Asker == null)
                 {
-                    // aşağı ilerle
-                    Koordinat.y--;
-                }
-                else if (karar >= 0.1 && karar < 0.2)
-                {
-                    // yukarı ilerle
-                    Koordinat.y++;
-                }
-                else if (karar >= 0.2 && karar < 0.3)
-                {
-                    // sağa ilerle
                     Koordinat.x++;
+                    bolge.Asker = this;
+                    oldBolge.Asker = null;
                 }
-                else if (karar >= 0.3 && karar < 0.4)
-                {
-                    // sola ilerle
-                    Koordinat.x--;
-                }
-
-                Koordinat = _koordinat;
-                Console.WriteLine($"{Ad} Teğmen Harket Ediyor.");
             }
-            else
+            else if (karar >= 0.1 && karar < 0.2)
             {
-                Console.WriteLine($"{Ad} Teğmen Harket Edemiyor. {x},{y} dolu");
+                // yukarı ilerle
+                _koordinat.x--;
+
+                var bolge = Ermeydani.Harita[_koordinat.x, _koordinat.y] as Bolge;
+                if (bolge.Asker == null)
+                {
+                    Koordinat.x--;
+                    bolge.Asker = this;
+                    oldBolge.Asker = null;
+                }
             }
+            else if (karar >= 0.2 && karar < 0.3)
+            {
+                // sağa ilerle
+                _koordinat.y++;
+
+                var bolge = Ermeydani.Harita[_koordinat.x, _koordinat.y] as Bolge;
+                if (bolge.Asker == null)
+                {
+                    Koordinat.y++;
+                    bolge.Asker = this;
+                    oldBolge.Asker = null;
+                }
+            }
+            else if (karar >= 0.3 && karar < 0.4)
+            {
+                // sola ilerle
+                _koordinat.y--;
+
+                var bolge = Ermeydani.Harita[_koordinat.x, _koordinat.y] as Bolge;
+                if (bolge.Asker == null)
+                {
+                    Koordinat.y--;
+                    bolge.Asker = this;
+                    oldBolge.Asker = null;
+                }
+            }
+            Console.WriteLine($"{Ad} Teğmen Harket Ediyor.");
         }
 
         protected override void AtesEt()
@@ -74,6 +92,7 @@ namespace Odev_1
         public override int KararVer(Takim _takim)
         {
             _digerTakim = _takim;
+            rnd = new Random();
             double karar = rnd.NextDouble();
             var _asker = Radar();
             vurulanAsker = _asker;
@@ -86,7 +105,6 @@ namespace Odev_1
             }
             else if (karar >= 0.4 && karar < 0.7)
             {
-                // ateş et
                 AtesEt();
                 x = 1;
             }
@@ -101,30 +119,46 @@ namespace Odev_1
 
         protected override Asker Radar()
         {
+            var state = false;
             Asker asker = new Er();
             for (int i = Koordinat.x - 2; i < Koordinat.x + 2; i++)
             {
-                for (int j = Koordinat.y - 2; j < Koordinat.y + 2; j++)
+                if (!state)
                 {
-                    if (i >= 0 && j >= 0)
+                    for (int j = Koordinat.y - 2; j < Koordinat.y + 2; j++)
                     {
-                        for (int t = 0; t < _digerTakim.Birlik.Length; t++)
+                        if (!state)
                         {
-                            if (_digerTakim.Birlik[t].Koordinat.x == i && _digerTakim.Birlik[t].Koordinat.y == j)
+                            if (i >= 0 && j >= 0)
                             {
-                                asker = _digerTakim.Birlik[t];
-                                break;
+                                for (int t = 0; t < _digerTakim.Birlik.Length; t++)
+                                {
+                                    if (_digerTakim.Birlik[t].Koordinat.x == i && _digerTakim.Birlik[t].Koordinat.y == j)
+                                    {
+                                        asker = _digerTakim.Birlik[t];
+                                        state = true;
+                                        break;
+                                    }
+                                    else
+                                    {
+                                        asker = null;
+                                    }
+                                }
                             }
                             else
                             {
                                 asker = null;
                             }
                         }
+                        else
+                        {
+                            break;
+                        }
                     }
-                    else
-                    {
-                        asker = null;
-                    }
+                }
+                else
+                {
+                    break;
                 }
             }
             return asker;

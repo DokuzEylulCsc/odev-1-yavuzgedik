@@ -27,7 +27,6 @@ namespace Odev_1
         public string Ad { get; set; }
         public Takim Takim { get; set; }
         public Ermeydani Ermeydani { get; set; }
-
         private int _saglik = 100;
         public int Saglik
         {
@@ -44,7 +43,6 @@ namespace Odev_1
                 }
             }
         }
-
 
         //Abstract sınıfların implementasyonları çoçuk sınıflarda gerçekleştirilmelidir.
         protected abstract void HaraketEt(Bolge _koordinat, double karar);

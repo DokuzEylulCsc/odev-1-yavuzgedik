@@ -136,31 +136,26 @@ namespace Odev_1
             kirmiziTakim.Birlik = kirmiziBirlik;
             #endregion
 
-            //for (int i = 0; i < 16; i++)
-            //{
-            //    for (int j = 0; j < 16; j++)
-            //    {
-            //        if (meydan.Harita[i, j].Asker != null)
-            //        {
-            //            Console.Write(meydan.Harita[i, j].Asker.Ad);
-            //        }
-            //        else
-            //        {
-            //            Console.Write(" ___ ");
-            //        }
-            //    }
-            //    Console.WriteLine();
-            //}
+            for (int i = 0; i < 16; i++)
+            {
+                for (int j = 0; j < 16; j++)
+                {
+                    if (meydan.Harita[i, j].Asker != null)
+                    {
+                        Console.Write(meydan.Harita[i, j].Asker.Ad);
+                    }
+                    else
+                    {
+                        Console.Write(" ___ ");
+                    }
+                }
+                Console.WriteLine();
+            }
 
-            //Console.WriteLine("Enter");
-            //Console.ReadKey();
-            //Console.Clear();
 
             bool gameState = true;
             while (gameState)
             {
-                
-
                 // Mavi Takim Siradaki Asker
                 bool maviState = false;
                 while (!maviState)
@@ -189,6 +184,8 @@ namespace Odev_1
                                 }
                                 Console.WriteLine();
                             }
+                            Console.WriteLine("Press Enter");
+                            Console.ReadKey();
                         }
 
                         if (kirmiziTakim.HayattakiAskerSayisi == 0)
@@ -196,9 +193,6 @@ namespace Odev_1
                             GameOver();
                             gameState = false;
                         }
-
-
-                        Console.Clear();
                     }
                 }
 
@@ -230,6 +224,9 @@ namespace Odev_1
                                 }
                                 Console.WriteLine();
                             }
+
+                            Console.WriteLine("Press Enter");
+                            Console.ReadKey();
                         }
 
                         if (maviTakim.HayattakiAskerSayisi == 0)
@@ -237,10 +234,6 @@ namespace Odev_1
                             GameOver();
                             gameState = false;
                         }
-
-
-
-                        Console.Clear();
                     }
                 }
             }
