@@ -10,7 +10,5 @@ namespace Odev_1
         Bolge[,] harita = new Bolge[16, 16];
 
         public Bolge[,] Harita { get { return harita; } set { harita = value; } }
-
-        // ..... //
     }
 }

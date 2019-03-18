@@ -11,6 +11,19 @@ namespace Odev_1
 
         public Asker[] Birlik { get { return birlik; } set { birlik = value; } }
 
-        // ..... //
+        public Bolge BaslangicBolgesi { get; set; }
+        public Bolge BitisBolgesi { get; set; }
+
+        private int _askerSayisi = 7;
+        public int HayattakiAskerSayisi
+        {
+            get { return _askerSayisi; }
+            set
+            {
+                _askerSayisi = value;
+            }
+        }
+
+        public string Ad { get; set; }
     }
 }

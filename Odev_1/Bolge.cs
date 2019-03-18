@@ -7,6 +7,8 @@ namespace Odev_1
 {
     class Bolge
     {
-        // ..... //
+        public int x { get; set; }
+        public int y { get; set; }
+        public Asker Asker { get; set; }
     }
 }

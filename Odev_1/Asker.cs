@@ -7,17 +7,55 @@ namespace Odev_1
 {
     abstract class Asker
     {
-        private Bolge koordinat;
-        public Bolge Koordinat { get { return koordinat; } }
+        protected Random rnd;
+        protected Asker vurulanAsker;
+        protected Takim _digerTakim;
 
-        // ..... //
+        public Asker()
+        {
+            rnd = new Random();
+        }
+
+        private Bolge koordinat;
+        public Bolge Koordinat
+        {
+            get { return koordinat; }
+            set { koordinat = value; }
+        }
+
+        public bool HayattaMi = true;
+        public string Ad { get; set; }
+        public Takim Takim { get; set; }
+        public Ermeydani Ermeydani { get; set; }
+
+        private int _saglik = 100;
+        public int Saglik
+        {
+            get { return _saglik; }
+            set
+            {
+                if (value < 0)
+                {
+                    _saglik = 0;
+                }
+                else
+                {
+                    _saglik = value;
+                }
+            }
+        }
+
 
         //Abstract sınıfların implementasyonları çoçuk sınıflarda gerçekleştirilmelidir.
-        public abstract void HaraketEt();
+        protected abstract void HaraketEt(Bolge _koordinat, double karar);
 
-        public abstract void Bekle();
+        protected abstract void Bekle();
 
-        // ..... //
+        protected abstract void AtesEt();
+
+        protected abstract Asker Radar();
+
+        public abstract int KararVer(Takim _takim);
 
     }
 }
